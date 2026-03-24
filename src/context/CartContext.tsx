@@ -58,6 +58,20 @@ export function CartProvider({ children }: CartProviderProps) {
     );
   }
 
+  function updateCartQuantity(productId: number, quantity: number) {
+    setCart((currentCart) => {
+      const nextQuantity = Number.isInteger(quantity) ? quantity : 1;
+
+      if (nextQuantity <= 0) {
+        return currentCart.filter((item) => item.id !== productId);
+      }
+
+      return currentCart.map((item) =>
+        item.id === productId ? { ...item, quantity: nextQuantity } : item,
+      );
+    });
+  }
+
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -66,7 +80,14 @@ export function CartProvider({ children }: CartProviderProps) {
 
   return (
     <CartContext.Provider
-      value={{ cart, totalItems, totalPrice, addToCart, removeFromCart }}
+      value={{
+        cart,
+        totalItems,
+        totalPrice,
+        addToCart,
+        updateCartQuantity,
+        removeFromCart,
+      }}
     >
       {children}
     </CartContext.Provider>

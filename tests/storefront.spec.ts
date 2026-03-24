@@ -140,6 +140,44 @@ test('product detail quantity stepper adds multiple items to the cart', async ({
   await expect(page.locator('.topbar__badge')).toHaveText('3');
 });
 
+test('cart quantity stepper updates item count and subtotal', async ({ page }) => {
+  await mockStoreApi(page);
+  await page.goto('/product/1/details');
+
+  await expect(
+    page.getByRole('button', { name: 'Add 1 to My Cart' }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Add 1 to My Cart' }).click();
+
+  await page.goto('/cart');
+
+  await expect(
+    page.getByRole('heading', { name: 'Cart Overview' }),
+  ).toBeVisible();
+
+  await page
+    .getByRole('button', {
+      name: /increase quantity for fjallraven - foldsack no. 1 backpack/i,
+    })
+    .click();
+
+  await expect(page.locator('.topbar__badge')).toHaveText('2');
+  await expect(page.locator('.cart-item .quantity-stepper__value')).toHaveText('2');
+  await expect(page.locator('.cart-summary__row strong').first()).toHaveText('2');
+  await expect(page.locator('.cart-summary__row strong').nth(1)).toHaveText(
+    '$219.90',
+  );
+
+  const decreaseButton = page.getByRole('button', {
+    name: /decrease quantity for fjallraven - foldsack no. 1 backpack/i,
+  });
+  await decreaseButton.click();
+
+  await expect(page.locator('.topbar__badge')).toHaveText('1');
+  await expect(page.locator('.cart-item .quantity-stepper__value')).toHaveText('1');
+  await expect(decreaseButton).toBeDisabled();
+});
+
 test('catalog toolbar does not stretch at tablet widths', async ({ page }) => {
   await page.setViewportSize({ width: 694, height: 517 });
   await mockStoreApi(page);

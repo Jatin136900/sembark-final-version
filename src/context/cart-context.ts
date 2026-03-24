@@ -6,6 +6,7 @@ export interface CartContextValue {
   totalItems: number;
   totalPrice: number;
   addToCart: (product: Product, quantity?: number) => void;
+  updateCartQuantity: (productId: number, quantity: number) => void;
   removeFromCart: (productId: number) => void;
 }
 

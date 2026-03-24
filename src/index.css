@@ -715,6 +715,22 @@ input:focus-visible {
   font-size: 0.95rem;
 }
 
+.cart-item__quantity {
+  display: inline-grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.cart-item__quantity-label {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.cart-item__quantity .quantity-stepper {
+  width: fit-content;
+}
+
 .cart-item__actions {
   display: grid;
   justify-items: end;

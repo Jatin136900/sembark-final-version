@@ -3,7 +3,8 @@ import { useCart } from '../context/cart-context';
 import { formatCategoryLabel, formatCurrency } from '../utils/shop';
 
 function CartPage() {
-  const { cart, totalItems, totalPrice, removeFromCart } = useCart();
+  const { cart, totalItems, totalPrice, updateCartQuantity, removeFromCart } =
+    useCart();
 
   if (cart.length === 0) {
     return (
@@ -49,9 +50,41 @@ function CartPage() {
                 </p>
                 <h2>{item.title}</h2>
                 <p className="cart-item__meta">
-                  <span>Quantity: {item.quantity}</span>
                   <span>Unit Price: {formatCurrency(item.price)}</span>
                 </p>
+
+                <div className="cart-item__quantity">
+                  <span className="cart-item__quantity-label">Quantity</span>
+
+                  <div className="quantity-stepper" aria-label="Select quantity">
+                    <button
+                      className="quantity-stepper__button"
+                      type="button"
+                      onClick={() =>
+                        updateCartQuantity(item.id, item.quantity - 1)
+                      }
+                      disabled={item.quantity === 1}
+                      aria-label={`Decrease quantity for ${item.title}`}
+                    >
+                      -
+                    </button>
+
+                    <output className="quantity-stepper__value" aria-live="polite">
+                      {item.quantity}
+                    </output>
+
+                    <button
+                      className="quantity-stepper__button"
+                      type="button"
+                      onClick={() =>
+                        updateCartQuantity(item.id, item.quantity + 1)
+                      }
+                      aria-label={`Increase quantity for ${item.title}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <div className="cart-item__actions">
