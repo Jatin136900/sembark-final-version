@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import RatingStars from '../components/RatingStars';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/cart-context';
 import { fetchProductById } from '../services/api';
 import type { Product } from '../types/Product';
 import { formatCategoryLabel, formatCurrency } from '../utils/shop';
@@ -33,6 +33,7 @@ function ProductDetailContent({ productId }: ProductDetailContentProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     let active = true;
@@ -76,6 +77,14 @@ function ProductDetailContent({ productId }: ProductDetailContentProps) {
     navigate('/');
   }
 
+  function decreaseQuantity() {
+    setQuantity((currentQuantity) => Math.max(1, currentQuantity - 1));
+  }
+
+  function increaseQuantity() {
+    setQuantity((currentQuantity) => currentQuantity + 1);
+  }
+
   if (loading) {
     return <p className="status-card page-enter">Loading product details...</p>;
   }
@@ -114,13 +123,40 @@ function ProductDetailContent({ productId }: ProductDetailContentProps) {
             {formatCurrency(product.price)}
           </p>
 
-          <button
-            className="primary-button primary-button--wide"
-            type="button"
-            onClick={() => addToCart(product)}
-          >
-            Add to My Cart
-          </button>
+          <div className="product-detail__purchase">
+            <div className="quantity-stepper" aria-label="Select quantity">
+              <button
+                className="quantity-stepper__button"
+                type="button"
+                onClick={decreaseQuantity}
+                disabled={quantity === 1}
+                aria-label="Decrease quantity"
+              >
+                -
+              </button>
+
+              <output className="quantity-stepper__value" aria-live="polite">
+                {quantity}
+              </output>
+
+              <button
+                className="quantity-stepper__button"
+                type="button"
+                onClick={increaseQuantity}
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
+
+            <button
+              className="primary-button primary-button--wide"
+              type="button"
+              onClick={() => addToCart(product, quantity)}
+            >
+              Add {quantity} to My Cart
+            </button>
+          </div>
         </div>
       </div>
     </section>

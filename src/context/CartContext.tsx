@@ -1,18 +1,9 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { CartItem, Product } from '../types/Product';
-
-interface CartContextValue {
-  cart: CartItem[];
-  totalItems: number;
-  totalPrice: number;
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: number) => void;
-}
+import { CartContext } from './cart-context';
 
 const STORAGE_KEY = 'sembark-cart';
-
-const CartContext = createContext<CartContextValue | undefined>(undefined);
 
 function readCartFromStorage(): CartItem[] {
   if (typeof window === 'undefined') {
@@ -43,17 +34,19 @@ export function CartProvider({ children }: CartProviderProps) {
     window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
   }, [cart]);
 
-  function addToCart(product: Product) {
+  function addToCart(product: Product, quantity = 1) {
+    const nextQuantity = Number.isInteger(quantity) && quantity > 0 ? quantity : 1;
+
     setCart((currentCart) => {
       const existingProduct = currentCart.find((item) => item.id === product.id);
 
       if (!existingProduct) {
-        return [...currentCart, { ...product, quantity: 1 }];
+        return [...currentCart, { ...product, quantity: nextQuantity }];
       }
 
       return currentCart.map((item) =>
         item.id === product.id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { ...item, quantity: item.quantity + nextQuantity }
           : item,
       );
     });
@@ -78,14 +71,4 @@ export function CartProvider({ children }: CartProviderProps) {
       {children}
     </CartContext.Provider>
   );
-}
-
-export function useCart() {
-  const context = useContext(CartContext);
-
-  if (!context) {
-    throw new Error('useCart must be used within a CartProvider.');
-  }
-
-  return context;
 }

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../context/cart-context';
 import { formatCategoryLabel, formatCurrency } from '../utils/shop';
 
 function CartPage() {
