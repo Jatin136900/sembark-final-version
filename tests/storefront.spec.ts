@@ -90,3 +90,12 @@ test('catalog, detail page, and cart flow work together', async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByRole('button', { name: 'Remove' })).toBeVisible();
 });
+
+test('unknown routes show the 404 page', async ({ page }) => {
+  await page.goto('/missing-page');
+
+  await expect(
+    page.getByRole('heading', { name: 'Page not found' }),
+  ).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Back to Home' })).toBeVisible();
+});

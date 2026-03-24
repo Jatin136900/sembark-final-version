@@ -11,8 +11,8 @@
   --accent-dark: #dd620a;
   --shadow-sm: 0 8px 20px rgba(36, 28, 22, 0.05);
   --shadow-md: 0 16px 36px rgba(36, 28, 22, 0.08);
-  --font-body: 'Avenir Next', 'Segoe UI', sans-serif;
-  --font-display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+  --font-body: 'Poppins', 'Segoe UI', sans-serif;
+  --font-display: 'Poppins', 'Segoe UI', sans-serif;
 }
 
 *,
@@ -33,6 +33,7 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -77,12 +78,22 @@ input:focus-visible {
 
 .app-shell {
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 .app-main {
   width: min(100%, var(--page-width));
   margin: 0 auto;
-  padding: 40px 48px 124px;
+  padding: 40px 48px calc(132px + env(safe-area-inset-bottom));
+}
+
+.topbar__inner > *,
+.footer-bar__inner > *,
+.catalog-toolbar > *,
+.product-detail__panel > *,
+.cart-layout > *,
+.cart-item > * {
+  min-width: 0;
 }
 
 .page-enter {
@@ -720,6 +731,65 @@ input:focus-visible {
   background: #c7af9c;
 }
 
+.product-card__meta,
+.cart-page__header,
+.cart-summary__row {
+  flex-wrap: wrap;
+}
+
+.product-card__title,
+.product-detail__title,
+.cart-item__content h2,
+.not-found__title {
+  overflow-wrap: anywhere;
+}
+
+.cart-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+
+.not-found {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  max-width: 42rem;
+  padding: 40px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-sm);
+}
+
+.not-found__title {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.not-found__copy {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.not-found__path {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
 @keyframes page-enter {
   from {
     opacity: 0;
@@ -776,6 +846,10 @@ input:focus-visible {
     width: 100%;
   }
 
+  .footer-bar__summary {
+    justify-content: center;
+  }
+
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -785,6 +859,10 @@ input:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .product-detail__description {
+    max-width: none;
+  }
+
   .cart-summary {
     order: -1;
   }
@@ -792,7 +870,7 @@ input:focus-visible {
 
 @media (max-width: 640px) {
   .app-main {
-    padding: 28px 16px 118px;
+    padding: 28px 16px calc(156px + env(safe-area-inset-bottom));
   }
 
   .topbar__inner,
@@ -812,6 +890,19 @@ input:focus-visible {
   .catalog-page__subtitle,
   .product-detail__description {
     font-size: 0.96rem;
+  }
+
+  .topbar__home {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+  }
+
+  .topbar__cart {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+    padding-inline: 14px;
   }
 
   .category-pills {
@@ -854,11 +945,50 @@ input:focus-visible {
     font-size: clamp(1.8rem, 8vw, 2.35rem);
   }
 
+  .cart-page__header {
+    align-items: start;
+  }
+
   .cart-item {
     grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 18px;
   }
 
   .cart-item__actions {
     justify-items: start;
+  }
+
+  .cart-item__actions,
+  .cart-item__actions .ghost-button {
+    width: 100%;
+  }
+
+  .footer-bar__summary {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-bar__divider {
+    display: none;
+  }
+
+  .not-found {
+    padding: 28px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sort-control {
+    align-items: stretch;
+  }
+
+  .sort-control select {
+    min-width: 0;
+  }
+
+  .cart-empty,
+  .cart-summary {
+    padding: 20px 16px;
   }
 }

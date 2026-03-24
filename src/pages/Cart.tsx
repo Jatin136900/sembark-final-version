@@ -49,8 +49,8 @@ function CartPage() {
                 </p>
                 <h2>{item.title}</h2>
                 <p className="cart-item__meta">
-                  Quantity: {item.quantity} | Unit Price:{' '}
-                  {formatCurrency(item.price)}
+                  <span>Quantity: {item.quantity}</span>
+                  <span>Unit Price: {formatCurrency(item.price)}</span>
                 </p>
               </div>
 
